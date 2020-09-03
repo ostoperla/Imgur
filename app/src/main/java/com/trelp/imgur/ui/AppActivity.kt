@@ -1,13 +1,14 @@
-package com.trelp.imgur
+package com.trelp.imgur.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.trelp.imgur.R
+import moxy.MvpAppCompatActivity
 import timber.log.Timber
 
-class MainActivity : AppCompatActivity() {
+class AppActivity : MvpAppCompatActivity(R.layout.layout_container) {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
         Timber.d(javaClass.simpleName)
     }
