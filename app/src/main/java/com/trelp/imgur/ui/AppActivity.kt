@@ -8,6 +8,7 @@ import com.trelp.imgur.di.Injector
 import com.trelp.imgur.di.activity.ActivityComponent
 import com.trelp.imgur.di.app.AppComponent
 import com.trelp.imgur.presentation.AppLauncher
+import com.trelp.imgur.ui.base.BaseFragment
 import moxy.MvpAppCompatActivity
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.NavigatorHolder
@@ -26,6 +27,9 @@ class AppActivity : MvpAppCompatActivity(R.layout.layout_container),
 
     private val navigator: Navigator =
         object : SupportAppNavigator(this, supportFragmentManager, R.id.fragmentContainer) {}
+
+    private val currentFragment
+        get() = supportFragmentManager.findFragmentById(R.id.fragmentContainer) as? BaseFragment<*>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Injector.getComponent(this).inject(this)
@@ -55,6 +59,10 @@ class AppActivity : MvpAppCompatActivity(R.layout.layout_container),
         if (isFinishing) {
             Injector.destroyComponent(getComponentKey())
         }
+    }
+
+    override fun onBackPressed() {
+        currentFragment?.onBackPressed() ?: super.onBackPressed()
     }
 
     //region Dagger
