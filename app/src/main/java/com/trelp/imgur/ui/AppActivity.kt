@@ -20,6 +20,14 @@ class AppActivity : MvpAppCompatActivity(R.layout.layout_container),
         Timber.d(javaClass.simpleName)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+        if (isFinishing) {
+            Injector.destroyComponent(getComponentKey())
+        }
+    }
+
     //region Dagger
     override fun getComponentKey() = "AppActivity"
 
