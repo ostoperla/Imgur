@@ -12,3 +12,13 @@ annotation class GlobalNav
 @Retention(AnnotationRetention.RUNTIME)
 @Target(FIELD, FUNCTION, VALUE_PARAMETER)
 annotation class FlowNav
+
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+@Target(FIELD, FUNCTION, VALUE_PARAMETER)
+annotation class AppContext
+
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+@Target(FIELD, FUNCTION, VALUE_PARAMETER)
+annotation class ActivityContext
