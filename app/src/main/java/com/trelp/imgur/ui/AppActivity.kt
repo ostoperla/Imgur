@@ -2,22 +2,51 @@ package com.trelp.imgur.ui
 
 import android.os.Bundle
 import com.trelp.imgur.R
+import com.trelp.imgur.di.GlobalNav
 import com.trelp.imgur.di.HasComponent
 import com.trelp.imgur.di.Injector
 import com.trelp.imgur.di.activity.ActivityComponent
 import com.trelp.imgur.di.app.AppComponent
+import com.trelp.imgur.presentation.AppLauncher
 import moxy.MvpAppCompatActivity
-import timber.log.Timber
+import ru.terrakok.cicerone.Navigator
+import ru.terrakok.cicerone.NavigatorHolder
+import ru.terrakok.cicerone.android.support.SupportAppNavigator
+import javax.inject.Inject
 
 class AppActivity : MvpAppCompatActivity(R.layout.layout_container),
     HasComponent<ActivityComponent> {
+
+    @Inject
+    lateinit var launcher: AppLauncher
+
+    @Inject
+    @GlobalNav
+    lateinit var navHolder: NavigatorHolder
+
+    private val navigator: Navigator =
+        object : SupportAppNavigator(this, supportFragmentManager, R.id.fragmentContainer) {}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Injector.getComponent(this).inject(this)
 
         super.onCreate(savedInstanceState)
 
-        Timber.d(javaClass.simpleName)
+        if (savedInstanceState == null) {
+            launcher.launch()
+        }
+    }
+
+    override fun onResumeFragments() {
+        super.onResumeFragments()
+
+        navHolder.setNavigator(navigator)
+    }
+
+    override fun onPause() {
+        navHolder.removeNavigator()
+
+        super.onPause()
     }
 
     override fun onDestroy() {
