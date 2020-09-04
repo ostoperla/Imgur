@@ -123,6 +123,16 @@ class AuthFragment : BaseFragment<AuthComponent>(R.layout.fragment_auth), AuthVi
     }
     //endregion
 
+    override fun onBackPressed() {
+        with(binding.authWebView) {
+            if (canGoBack()) {
+                goBack()
+            } else {
+                presenter.onBackPressed()
+            }
+        }
+    }
+
     //region Dagger
     override fun setupComponent() {
         Injector.getComponent(this).inject(this)
