@@ -11,4 +11,8 @@ class FlowRouter(
     fun newFlowRootScreen(screen: SupportAppScreen) {
         globalRouter.newRootScreen(screen)
     }
+
+    fun navigateFlowTo(screen: SupportAppScreen) {
+        globalRouter.navigateTo(screen)
+    }
 }
