@@ -2,6 +2,7 @@ package com.trelp.imgur.ui.drawer
 
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.trelp.imgur.R
 import com.trelp.imgur.Screens
@@ -9,9 +10,19 @@ import com.trelp.imgur.databinding.FragmentDrawerFlowBinding
 import com.trelp.imgur.di.Injector
 import com.trelp.imgur.di.activity.ActivityComponent
 import com.trelp.imgur.di.flow.drawer.DrawerFlowComponent
+import com.trelp.imgur.presentation.GlobalMenuController
+import com.trelp.imgur.presentation.drawer.NavDrawerView.MenuItem.*
+import com.trelp.imgur.ui.about.AboutFragment
 import com.trelp.imgur.ui.base.BaseFragment
 import com.trelp.imgur.ui.base.FlowFragment
+import com.trelp.imgur.ui.bottom.BottomFragment
+import com.trelp.imgur.ui.settings.SettingsFragment
+import io.reactivex.disposables.Disposable
+import ru.terrakok.cicerone.Navigator
+import ru.terrakok.cicerone.android.support.SupportAppNavigator
+import ru.terrakok.cicerone.commands.Command
 import timber.log.Timber
+import javax.inject.Inject
 
 class DrawerFlowFragment : FlowFragment<DrawerFlowComponent>(R.layout.fragment_drawer_flow) {
 
@@ -24,11 +35,29 @@ class DrawerFlowFragment : FlowFragment<DrawerFlowComponent>(R.layout.fragment_d
     private val currentFragment
         get() = childFragmentManager.findFragmentById(container) as? BaseFragment<*>
 
+    private val navDrawerFragment
+        get() = childFragmentManager.findFragmentById(R.id.navDrawerContainer) as? NavDrawerFragment
+
+    override val navigator: Navigator by lazy {
+        object : SupportAppNavigator(requireActivity(), childFragmentManager, container) {
+
+            override fun applyCommands(commands: Array<out Command>) {
+                super.applyCommands(commands)
+
+                Timber.d("applyCommands")
+                updateNavDrawer()
+            }
+        }
+    }
+
+    @Inject
+    lateinit var menuController: GlobalMenuController
+
+    private var menuStateDisposable: Disposable? = null
+
     //region LifeCycle
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        Timber.d(javaClass.simpleName)
 
         if (childFragmentManager.fragments.isEmpty()) {
             childFragmentManager.commit {
@@ -38,6 +67,8 @@ class DrawerFlowFragment : FlowFragment<DrawerFlowComponent>(R.layout.fragment_d
                 )
             }
             flowRouter.newRootScreen(Screens.Bottom)
+        } else {
+            updateNavDrawer()
         }
     }
 
@@ -47,10 +78,44 @@ class DrawerFlowFragment : FlowFragment<DrawerFlowComponent>(R.layout.fragment_d
         fragmentDrawerFlowBinding = FragmentDrawerFlowBinding.bind(view)
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        menuStateDisposable = menuController.state.subscribe(::openNavDrawer)
+    }
+
+    override fun onPause() {
+        menuStateDisposable?.dispose()
+
+        super.onPause()
+    }
+
     override fun onDestroyView() {
         fragmentDrawerFlowBinding = null
 
         super.onDestroyView()
+    }
+    //endregion
+
+    //region NavDrawer
+    private fun updateNavDrawer() {
+        Timber.d("updateNavDrawer")
+
+        navDrawerFragment?.let { navDrFrag ->
+            (currentFragment as? Fragment).let {        // TODO: 08.09.2020 replace cast after implement BottomComponent, SettingsComponent, AboutComponent
+                when (it) {
+                    is BottomFragment -> navDrFrag.onScreenChanged(HOME)
+                    is SettingsFragment -> navDrFrag.onScreenChanged(SETTINGS)
+                    is AboutFragment -> navDrFrag.onScreenChanged(ABOUT)
+                }
+            }
+        }
+    }
+
+    private fun openNavDrawer(open: Boolean) {
+        with(binding.drawerLayout) {
+            if (open) open() else close()
+        }
     }
     //endregion
 
