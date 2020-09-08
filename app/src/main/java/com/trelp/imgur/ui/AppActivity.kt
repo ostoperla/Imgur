@@ -31,8 +31,13 @@ class AppActivity : MvpAppCompatActivity(R.layout.layout_container),
     private val currentFragment
         get() = supportFragmentManager.findFragmentById(R.id.fragmentContainer) as? BaseFragment<*>
 
+    private lateinit var daggerComponentKey: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
-        Injector.getComponent(this).inject(this)
+        daggerComponentKey = savedInstanceState?.getString(STATE_COMPONENT_KEY)
+            ?: "${javaClass.simpleName}#${this.hashCode()}"
+
+        Injector.getComponent(this, daggerComponentKey).inject(this)
 
         super.onCreate(savedInstanceState)
 
@@ -53,11 +58,17 @@ class AppActivity : MvpAppCompatActivity(R.layout.layout_container),
         super.onPause()
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putString(STATE_COMPONENT_KEY, daggerComponentKey)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
 
         if (isFinishing) {
-            Injector.destroyComponent(getComponentKey())
+            Injector.destroyComponent(daggerComponentKey)
         }
     }
 
@@ -66,9 +77,11 @@ class AppActivity : MvpAppCompatActivity(R.layout.layout_container),
     }
 
     //region Dagger
-    override fun getComponentKey() = "AppActivity"
-
     override fun createComponent() =
         Injector.findComponent<AppComponent>().activityComponentFactory().create()
     //endregion
+
+    companion object {
+        private const val STATE_COMPONENT_KEY = "state_component_key"
+    }
 }

@@ -134,11 +134,9 @@ class AuthFragment : BaseFragment<AuthComponent>(R.layout.fragment_auth), AuthVi
     }
 
     //region Dagger
-    override fun setupComponent() {
-        Injector.getComponent(this).inject(this)
+    override fun setupComponent(componentKey: String) {
+        Injector.getComponent(this, componentKey).inject(this)
     }
-
-    override fun getComponentKey() = "Auth"
 
     override fun createComponent() =
         Injector.findComponent<AuthFlowComponent>().authComponentFactory().create()

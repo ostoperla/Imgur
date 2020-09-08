@@ -4,8 +4,7 @@ import timber.log.Timber
 
 interface IComponent
 
-interface HasComponent<out T : IComponent> {
-    fun getComponentKey(): String
+fun interface HasComponent<out T : IComponent> {
     fun createComponent(): T
 }
 
@@ -40,21 +39,21 @@ class ComponentStore {
 object Injector {
     private val store = ComponentStore()
 
-    fun <T : IComponent> init(rootComponent: T, key: String = "Application") {
+    fun <T : IComponent> init(rootComponent: T) {
+        val key = "${rootComponent.javaClass.simpleName}#${rootComponent.hashCode()}"
         store.put(key, rootComponent)
-        log(message = "Create ${rootComponent.javaClass.simpleName}")
+        log(message = "Create $key")
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun <T : IComponent> getComponent(owner: HasComponent<T>): T {
-        val key = owner.getComponentKey()
+    fun <T : IComponent> getComponent(owner: HasComponent<T>, key: String): T {
         return if (store.isExist(key)) {
             val component = store.get(key) as T
-            log(message = "Get ${component.javaClass.simpleName}")
+            log(message = "Get $key")
             component
         } else {
             val component = owner.createComponent().also { store.put(key, it) }
-            log(message = "Create ${component.javaClass.simpleName}")
+            log(message = "Create $key")
             component
         }
     }
@@ -65,7 +64,7 @@ object Injector {
 
     fun destroyComponent(key: String): IComponent {
         val component = store.remove(key)
-        log(message = "Destroy ${component.javaClass.simpleName}")
+        log(message = "Destroy $key")
         return component
     }
 

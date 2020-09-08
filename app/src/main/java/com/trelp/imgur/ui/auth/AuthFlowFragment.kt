@@ -32,11 +32,9 @@ class AuthFlowFragment : FlowFragment<AuthFlowComponent>(R.layout.layout_contain
     }
 
     //region Dagger
-    override fun setupComponent() {
-        Injector.getComponent(this).inject(this)
+    override fun setupComponent(componentKey: String) {
+        Injector.getComponent(this, componentKey).inject(this)
     }
-
-    override fun getComponentKey() = "AuthFlow"
 
     override fun createComponent() =
         Injector.findComponent<ActivityComponent>().authFlowComponentFactory().create()

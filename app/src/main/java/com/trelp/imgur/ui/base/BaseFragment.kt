@@ -1,6 +1,5 @@
 package com.trelp.imgur.ui.base
 
-import android.content.Context
 import android.os.Bundle
 import androidx.annotation.ContentView
 import androidx.annotation.LayoutRes
@@ -15,12 +14,16 @@ abstract class BaseFragment<T : IComponent> @ContentView constructor(
 ) : MvpAppCompatFragment(contentLayoutId), HasComponent<T> {
 
     private var isSaveState: Boolean = false
+    private lateinit var daggerComponentKey: String
 
     //region LifeCycle
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        daggerComponentKey = savedInstanceState?.getString(STATE_COMPONENT_KEY)
+            ?: "${javaClass.simpleName}#${this.hashCode()}"
 
-        setupComponent()
+        setupComponent(daggerComponentKey)
+
+        super.onCreate(savedInstanceState)
     }
 
     override fun onResume() {
@@ -33,12 +36,15 @@ abstract class BaseFragment<T : IComponent> @ContentView constructor(
         super.onSaveInstanceState(outState)
 
         isSaveState = true
+        outState.putString(STATE_COMPONENT_KEY, daggerComponentKey)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        if (needDestroyComponent())
-            Injector.destroyComponent(getComponentKey())
+
+        if (needDestroyComponent()) {
+            Injector.destroyComponent(daggerComponentKey)
+        }
     }
     //endregion
 
@@ -49,16 +55,16 @@ abstract class BaseFragment<T : IComponent> @ContentView constructor(
     //region Dagger
     private fun needDestroyComponent() = when {
         requireActivity().isChangingConfigurations -> {
-            Injector.log(cause = "isChangeConfig in ${javaClass.simpleName} -> false")
+            Injector.log(cause = "isChangeConfig in ${javaClass.simpleName}#${this.hashCode()} -> false")
             false
         }
         requireActivity().isFinishing -> {
-            Injector.log(cause = "isFinishing in ${javaClass.simpleName} -> true")
+            Injector.log(cause = "isFinishing in ${javaClass.simpleName}#${this.hashCode()} -> true")
             true
         }
         else -> {
             val realRemoving = isRealRemoving()
-            Injector.log(cause = "isRealRemoving in ${javaClass.simpleName} -> $realRemoving")
+            Injector.log(cause = "isRealRemoving in ${javaClass.simpleName}#${this.hashCode()} -> $realRemoving")
             realRemoving
         }
     }
@@ -69,6 +75,10 @@ abstract class BaseFragment<T : IComponent> @ContentView constructor(
         isRemoving && !isSaveState ||
                 ((parentFragment as? BaseFragment<*>)?.isRealRemoving() ?: false)
 
-    abstract fun setupComponent()
+    abstract fun setupComponent(componentKey: String)
     //endregion
+
+    companion object {
+        private const val STATE_COMPONENT_KEY = "state_component_key"
+    }
 }
