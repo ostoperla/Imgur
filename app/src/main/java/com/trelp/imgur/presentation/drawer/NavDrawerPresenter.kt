@@ -6,6 +6,7 @@ import com.trelp.imgur.di.FragmentScope
 import com.trelp.imgur.domain.SessionInteractor
 import com.trelp.imgur.domain.UserAccount
 import com.trelp.imgur.presentation.FlowRouter
+import com.trelp.imgur.presentation.GlobalMenuController
 import com.trelp.imgur.presentation.drawer.NavDrawerView.MenuItem
 import com.trelp.imgur.presentation.drawer.NavDrawerView.MenuItem.*
 import moxy.MvpPresenter
@@ -15,7 +16,8 @@ import javax.inject.Inject
 @FragmentScope
 class NavDrawerPresenter @Inject constructor(
     @FlowNav private val flowRouter: FlowRouter,
-    private val sessionInteractor: SessionInteractor
+    private val sessionInteractor: SessionInteractor,
+    private val menuController: GlobalMenuController,
 ) : MvpPresenter<NavDrawerView>() {
 
     private var currentAccount: UserAccount? = null
@@ -31,10 +33,14 @@ class NavDrawerPresenter @Inject constructor(
     }
 
     fun onProfileClicked() {
-        flowRouter.newRootScreen(Screens.Bottom)    // TODO: 06.09.2020 Сразу отобразить ProfileFragment в нем
+        menuController.close()
+        currentAccount?.let {
+            flowRouter.newRootScreen(Screens.Bottom)    // TODO: 06.09.2020 Сразу отобразить ProfileFragment в нем
+        }
     }
 
     fun onLogoutClicked() {
+        menuController.close()
         currentAccount?.let {
             val hasOtherAccount = sessionInteractor.logout(it.id)
             if (hasOtherAccount) {
@@ -57,6 +63,7 @@ class NavDrawerPresenter @Inject constructor(
     }
 
     fun onMenuItemClicked(item: MenuItem) {
+        menuController.close()
         if (item != currentMenuItem) {
             Timber.d("item $item != currentMenuItem $currentMenuItem ${item != currentMenuItem}")
             when (item) {
@@ -68,6 +75,7 @@ class NavDrawerPresenter @Inject constructor(
     }
 
     fun onScreenChanged(item: MenuItem) {
+        menuController.close()
         currentMenuItem = item
         Timber.d("$currentMenuItem")
         viewState.selectMenuItem(item)
