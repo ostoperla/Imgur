@@ -19,11 +19,9 @@ class NavDrawerFragment : BaseFragment<NavDrawerComponent>(R.layout.fragment_nav
     //endregion
 
     //region Dagger
-    override fun setupComponent() {
-        Injector.getComponent(this).inject(this)
+    override fun setupComponent(componentKey: String) {
+        Injector.getComponent(this, componentKey).inject(this)
     }
-
-    override fun getComponentKey() = "NavDrawer"
 
     override fun createComponent() =
         Injector.findComponent<DrawerFlowComponent>().navDrawerComponentFactory().create()

@@ -65,11 +65,9 @@ class DrawerFlowFragment : FlowFragment<DrawerFlowComponent>(R.layout.fragment_d
     }
 
     //region Dagger
-    override fun setupComponent() {
-        Injector.getComponent(this).inject(this)
+    override fun setupComponent(componentKey: String) {
+        Injector.getComponent(this, componentKey).inject(this)
     }
-
-    override fun getComponentKey() = "DrawerFlow"
 
     override fun createComponent() =
         Injector.findComponent<ActivityComponent>().drawerFlowComponentFactory().create()
