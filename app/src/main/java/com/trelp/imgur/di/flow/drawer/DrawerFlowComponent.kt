@@ -5,6 +5,7 @@ import com.trelp.imgur.di.IComponent
 import com.trelp.imgur.di.about.AboutComponent
 import com.trelp.imgur.di.drawer.NavDrawerComponent
 import com.trelp.imgur.di.flow.FlowNavModule
+import com.trelp.imgur.di.settings.SettingsComponent
 import com.trelp.imgur.ui.drawer.DrawerFlowFragment
 import dagger.Subcomponent
 
@@ -24,5 +25,6 @@ interface DrawerFlowComponent : IComponent {
     fun inject(drawerFlowFragment: DrawerFlowFragment)
 
     fun navDrawerComponentFactory(): NavDrawerComponent.Factory
+    fun settingsComponentFactory(): SettingsComponent.Factory
     fun aboutComponentFactory(): AboutComponent.Factory
 }
