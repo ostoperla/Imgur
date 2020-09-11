@@ -105,7 +105,7 @@ class DrawerFlowFragment : FlowFragment<DrawerFlowComponent>(R.layout.fragment_d
 
     //region NavDrawer
     private fun updateNavDrawer() {
-        Timber.d("updateNavDrawer")
+        childFragmentManager.executePendingTransactions()
 
         navDrawerFragment?.let { navDrFrag ->
             currentFragment?.let {

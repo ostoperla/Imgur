@@ -77,7 +77,7 @@ class NavDrawerPresenter @Inject constructor(
     fun onScreenChanged(item: MenuItem) {
         menuController.close()
         currentMenuItem = item
-        Timber.d("$currentMenuItem")
+        Timber.d("currentMenuItem = $currentMenuItem")
         viewState.selectMenuItem(item)
     }
 }
