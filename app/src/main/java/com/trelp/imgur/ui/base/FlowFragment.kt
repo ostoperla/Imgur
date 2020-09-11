@@ -24,7 +24,7 @@ abstract class FlowFragment<T : IComponent> @ContentView constructor(
     @FlowNav
     lateinit var navHolder: NavigatorHolder
 
-    private val navigator: Navigator by lazy {
+    protected open val navigator: Navigator by lazy {
         object : SupportAppNavigator(requireActivity(), childFragmentManager, container) {}
     }
 

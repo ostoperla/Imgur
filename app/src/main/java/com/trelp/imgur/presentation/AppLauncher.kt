@@ -1,18 +1,25 @@
 package com.trelp.imgur.presentation
 
 import com.trelp.imgur.Screens
+import com.trelp.imgur.data.UserRepository
 import com.trelp.imgur.di.ActivityScope
 import com.trelp.imgur.di.GlobalNav
 import ru.terrakok.cicerone.Router
-import timber.log.Timber
 import javax.inject.Inject
 
 @ActivityScope
 class AppLauncher @Inject constructor(
-    @GlobalNav private val router: Router
+    @GlobalNav private val router: Router,
+    private val userRepo: UserRepository
 ) {
+    private val hasAccount
+        get() = userRepo.currentAccountId != 0
+
     fun launch() {
-        Timber.d("Launch Auth Flow")
-        router.newRootScreen(Screens.AuthFlow)
+        if (hasAccount) {
+            router.newRootScreen(Screens.DrawerFlow)
+        } else {
+            router.newRootScreen(Screens.AuthFlow)
+        }
     }
 }

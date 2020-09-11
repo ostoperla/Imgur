@@ -26,6 +26,25 @@ class SessionInteractor @Inject constructor(
     val accounts
         get() = userRepo.accounts
 
+    /**
+     * @return true, if has other accounts
+     */
+    fun logout(accountId: Int): Boolean {
+        val accounts = userRepo.accounts.toMutableList()
+        accounts.removeAll { it.id == accountId }
+        userRepo.accounts = accounts
+
+        userRepo.currentAccountId = 0
+
+        initNewSession()
+
+        return accounts.firstOrNull() != null
+    }
+
+    private fun initNewSession() {
+        // recreate UserComponent and clear cache
+    }
+
     fun checkOAuthRedirect(url: String) =
         url.indexOf(oAuthParams.oAuthCallback) == 0
 
