@@ -29,8 +29,8 @@ class DrawerFlowFragment : FlowFragment<DrawerFlowComponent>(R.layout.fragment_d
     override val container: Int
         get() = R.id.fragmentContainer
 
-    private var fragmentDrawerFlowBinding: FragmentDrawerFlowBinding? = null
-    private val binding get() = fragmentDrawerFlowBinding!!
+    private val binding
+        get() = viewBinding!! as FragmentDrawerFlowBinding
 
     private val currentFragment
         get() = childFragmentManager.findFragmentById(container) as? BaseFragment<*>
@@ -81,7 +81,7 @@ class DrawerFlowFragment : FlowFragment<DrawerFlowComponent>(R.layout.fragment_d
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        fragmentDrawerFlowBinding = FragmentDrawerFlowBinding.bind(view)
+        viewBinding = FragmentDrawerFlowBinding.bind(view)
     }
 
     override fun onResume() {
@@ -94,12 +94,6 @@ class DrawerFlowFragment : FlowFragment<DrawerFlowComponent>(R.layout.fragment_d
         menuStateDisposable?.dispose()
 
         super.onPause()
-    }
-
-    override fun onDestroyView() {
-        fragmentDrawerFlowBinding = null
-
-        super.onDestroyView()
     }
     //endregion
 
