@@ -3,6 +3,7 @@ package com.trelp.imgur.ui.base
 import android.os.Bundle
 import androidx.annotation.ContentView
 import androidx.annotation.LayoutRes
+import androidx.viewbinding.ViewBinding
 import com.trelp.imgur.di.HasComponent
 import com.trelp.imgur.di.IComponent
 import com.trelp.imgur.di.Injector
@@ -15,6 +16,9 @@ abstract class BaseFragment<T : IComponent> @ContentView constructor(
 
     private var isSaveState: Boolean = false
     private lateinit var daggerComponentKey: String
+
+//    backing property
+    protected var viewBinding: ViewBinding? = null
 
     //region LifeCycle
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,6 +41,12 @@ abstract class BaseFragment<T : IComponent> @ContentView constructor(
 
         isSaveState = true
         outState.putString(STATE_COMPONENT_KEY, daggerComponentKey)
+    }
+
+    override fun onDestroyView() {
+        viewBinding = null
+
+        super.onDestroyView()
     }
 
     override fun onDestroy() {

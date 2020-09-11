@@ -26,8 +26,8 @@ import javax.inject.Provider
 
 class AuthFragment : BaseFragment<AuthComponent>(R.layout.fragment_auth), AuthView {
 
-    private var fragmentAuthBinding: FragmentAuthBinding? = null
-    private val binding get() = fragmentAuthBinding!!
+    private val binding
+        get() = viewBinding!! as FragmentAuthBinding
 
     @Inject
     lateinit var presenterProvider: Provider<AuthPresenter>
@@ -44,7 +44,7 @@ class AuthFragment : BaseFragment<AuthComponent>(R.layout.fragment_auth), AuthVi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        fragmentAuthBinding = FragmentAuthBinding.bind(view)
+        viewBinding = FragmentAuthBinding.bind(view)
 
         binding.toolbar.setNavigationOnClickListener { presenter.onBackPressed() }
 
@@ -66,7 +66,6 @@ class AuthFragment : BaseFragment<AuthComponent>(R.layout.fragment_auth), AuthVi
 
     override fun onDestroyView() {
         binding.authWebView.destroy()
-        fragmentAuthBinding = null
 
         super.onDestroyView()
     }

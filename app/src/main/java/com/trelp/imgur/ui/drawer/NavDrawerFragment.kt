@@ -22,8 +22,8 @@ import javax.inject.Provider
 class NavDrawerFragment : BaseFragment<NavDrawerComponent>(R.layout.fragment_nav_drawer),
     NavDrawerView {
 
-    private var fragmentNavDrawerBinding: FragmentNavDrawerBinding? = null
-    private val binding get() = fragmentNavDrawerBinding!!
+    private val binding
+        get() = viewBinding!! as FragmentNavDrawerBinding
 
     @Inject
     lateinit var presenterProvider: Provider<NavDrawerPresenter>
@@ -33,7 +33,7 @@ class NavDrawerFragment : BaseFragment<NavDrawerComponent>(R.layout.fragment_nav
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        fragmentNavDrawerBinding = FragmentNavDrawerBinding.bind(view)
+        viewBinding = FragmentNavDrawerBinding.bind(view)
 
         showAccounts(false)
 
@@ -49,12 +49,6 @@ class NavDrawerFragment : BaseFragment<NavDrawerComponent>(R.layout.fragment_nav
             settingsMenuItem.setOnClickListener { presenter.onMenuItemClicked(it.tag as MenuItem) }
             aboutMenuItem.setOnClickListener { presenter.onMenuItemClicked(it.tag as MenuItem) }
         }
-    }
-
-    override fun onDestroyView() {
-        fragmentNavDrawerBinding = null
-
-        super.onDestroyView()
     }
     //endregion
 
