@@ -2,7 +2,6 @@ package com.trelp.imgur.ui.drawer
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.trelp.imgur.R
 import com.trelp.imgur.Screens
@@ -10,6 +9,7 @@ import com.trelp.imgur.databinding.FragmentDrawerFlowBinding
 import com.trelp.imgur.di.Injector
 import com.trelp.imgur.di.activity.ActivityComponent
 import com.trelp.imgur.di.flow.drawer.DrawerFlowComponent
+import com.trelp.imgur.newRootScreen
 import com.trelp.imgur.presentation.GlobalMenuController
 import com.trelp.imgur.presentation.drawer.NavDrawerView.MenuItem.*
 import com.trelp.imgur.ui.about.AboutFragment
@@ -44,7 +44,13 @@ class DrawerFlowFragment : FlowFragment<DrawerFlowComponent>(R.layout.fragment_d
             override fun applyCommands(commands: Array<out Command>) {
                 super.applyCommands(commands)
 
-                Timber.d("applyCommands")
+                Timber.d(
+                    "commands = ${
+                        commands.toList().joinToString(prefix = "(", postfix = ")") {
+                            it.javaClass.simpleName
+                        }
+                    }")
+
                 updateNavDrawer()
             }
         }
@@ -66,7 +72,7 @@ class DrawerFlowFragment : FlowFragment<DrawerFlowComponent>(R.layout.fragment_d
                     Screens.NavDrawer.fragment!!
                 )
             }
-            flowRouter.newRootScreen(Screens.Bottom)
+            navigator.newRootScreen(Screens.Bottom)
         } else {
             updateNavDrawer()
         }
@@ -102,7 +108,7 @@ class DrawerFlowFragment : FlowFragment<DrawerFlowComponent>(R.layout.fragment_d
         Timber.d("updateNavDrawer")
 
         navDrawerFragment?.let { navDrFrag ->
-            (currentFragment as? Fragment).let {        // TODO: 08.09.2020 replace cast after implement BottomComponent, SettingsComponent, AboutComponent
+            currentFragment?.let {
                 when (it) {
                     is BottomFragment -> navDrFrag.onScreenChanged(HOME)
                     is SettingsFragment -> navDrFrag.onScreenChanged(SETTINGS)
