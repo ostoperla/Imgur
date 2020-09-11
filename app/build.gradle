@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'scabbard.gradle'
+//apply plugin: 'scabbard.gradle'
 
 def authPropertiesFile = rootProject.file("oauth.properties")
 def authProperties = new Properties()
@@ -55,9 +55,9 @@ android {
         jvmTarget = "1.8"
     }
 
-    scabbard {
-        enabled true
-    }
+//    scabbard {
+//        enabled true
+//    }
 }
 
 dependencies {
