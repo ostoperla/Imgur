@@ -8,7 +8,7 @@ import com.trelp.imgur.di.flow.drawer.DrawerFlowComponent
 import com.trelp.imgur.ui.base.BaseFragment
 import timber.log.Timber
 
-class BottomFragment : BaseFragment<BottomComponent>(R.layout.layout_container) {
+class BottomFragment : BaseFragment<BottomComponent>(R.layout.fragment_bottom) {
 
     //region LifeCycle
     override fun onCreate(savedInstanceState: Bundle?) {

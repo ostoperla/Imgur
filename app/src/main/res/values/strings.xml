@@ -5,4 +5,8 @@
     <string name="about_menu_item">About</string>
     <string name="home_menu_item">Home</string>
     <string name="add_account">Add account</string>
+    <string name="title_upload">Upload</string>
+    <string name="title_user">User</string>
+    <string name="title_search">Search</string>
+    <string name="title_gallery">Gallery</string>
 </resources>
