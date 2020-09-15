@@ -12,3 +12,5 @@ class HyperlinkedDebugTree(
 }
 
 inline fun Any?.log(prefix: String = "object:") = Timber.d("$prefix${toString()}")
+
+fun Any.simpleName(): String = javaClass.simpleName
