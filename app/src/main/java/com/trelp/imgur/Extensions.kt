@@ -2,6 +2,8 @@ package com.trelp.imgur
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 import ru.terrakok.cicerone.commands.BackTo
@@ -22,3 +24,9 @@ fun Navigator.newRootScreen(screen: SupportAppScreen) {
         )
     )
 }
+
+val FragmentActivity.fragments: List<Fragment>
+    get() = supportFragmentManager.fragments
+
+val Fragment.fragments: List<Fragment>
+    get() = childFragmentManager.fragments
