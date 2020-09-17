@@ -21,11 +21,8 @@ class BottomFragment : BaseFragment<BottomComponent>(R.layout.fragment_bottom) {
     private val binding
         get() = viewBinding!! as FragmentBottomBinding
 
-    private val currentTabBaseFragment
+    private val currentTabFragment
         get() = fragments.find { !it.isHidden } as? BaseFragment<*>
-
-    private val currentTabFragment          // TODO: 15.09.2020 Удалить после создания DI компонентов для root fragments из табов
-        get() = fragments.find { !it.isHidden }
 
     //region LifeCycle
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -87,7 +84,7 @@ class BottomFragment : BaseFragment<BottomComponent>(R.layout.fragment_bottom) {
     }
 
     override fun onBackPressed() {
-        currentTabBaseFragment?.onBackPressed()
+        currentTabFragment?.onBackPressed()
     }
 
     //region Dagger
