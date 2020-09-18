@@ -9,4 +9,8 @@
     <string name="title_user">User</string>
     <string name="title_search">Search</string>
     <string name="title_gallery">Gallery</string>
+    <string name="empty_data_title">Empty data</string>
+    <string name="empty_data_description">You have not data yet.\nPlease try again later.</string>
+    <string name="empty_data_error">Sir, we have a problem.</string>
+    <string name="empty_data_error_description">Something went wrong.\nPlease try again later.</string>
 </resources>
