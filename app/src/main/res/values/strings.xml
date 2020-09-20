@@ -24,4 +24,5 @@
     <string name="conflict_error">409 Conflict</string>
     <string name="unprocessable_error">422 Unprocessable</string>
     <string name="server_error_error">500 Server Error</string>
+    <string name="gallery_title">Gallery</string>
 </resources>
