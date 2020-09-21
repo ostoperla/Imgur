@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_mv_popular"
+        android:title="Most Viral - Popular" />
+    <item
+        android:id="@+id/menu_mv_newest"
+        android:title="Most Viral - Newest" />
+    <item
+        android:id="@+id/menu_mv_best"
+        android:title="Most Viral - Best" />
+    <item
+        android:id="@+id/menu_us_popular"
+        android:title="User Submitted - Popular" />
+    <item
+        android:id="@+id/menu_us_rising"
+        android:title="User Submitted - Rising" />
+    <item
+        android:id="@+id/menu_us_newest"
+        android:title="User Submitted - Newest" />
+    <item
+        android:id="@+id/menu_hs_today"
+        android:title="Highest Scoring - Today" />
+    <item
+        android:id="@+id/menu_hs_week"
+        android:title="Highest Scoring - Week" />
+    <item
+        android:id="@+id/menu_hs_month"
+        android:title="Highest Scoring - Month" />
+    <item
+        android:id="@+id/menu_hs_year"
+        android:title="Highest Scoring - Year" />
+    <item
+        android:id="@+id/menu_hs_all_time"
+        android:title="Highest Scoring - All time" />
+</menu>
