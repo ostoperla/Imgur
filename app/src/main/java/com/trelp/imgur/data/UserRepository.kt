@@ -1,13 +1,13 @@
 package com.trelp.imgur.data
 
-import com.trelp.imgur.di.ActivityScope
 import com.trelp.imgur.domain.UserAccount
 import io.reactivex.Single
 import java.net.URI
 import java.net.URISyntaxException
 import javax.inject.Inject
+import javax.inject.Singleton
 
-@ActivityScope
+@Singleton
 class UserRepository @Inject constructor(
     private val prefs: PrefsManager
 ) {
