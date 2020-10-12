@@ -4,8 +4,8 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.trelp.imgur.data.AppSchedulers
 import com.trelp.imgur.data.SchedulersProvider
-import com.trelp.imgur.data.source.network.GalleryObjectDeserializer
-import com.trelp.imgur.data.source.network.TagsDeserializer
+import com.trelp.imgur.data.source.network.deserializer.GalleryObjectDeserializer
+import com.trelp.imgur.data.source.network.deserializer.TagsDeserializer
 import com.trelp.imgur.domain.GalleryObject
 import com.trelp.imgur.domain.Tags
 import dagger.Module

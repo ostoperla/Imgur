@@ -1,16 +1,16 @@
-package com.trelp.imgur.di.activity
+package com.trelp.imgur.di.app
 
 import com.trelp.imgur.BuildConfig
-import com.trelp.imgur.di.ActivityScope
-import com.trelp.imgur.domain.OAuthParams
+import com.trelp.imgur.domain.session.OAuthParams
 import dagger.Module
 import dagger.Provides
+import javax.inject.Singleton
 
 @Module
 object AuthModule {
 
     @Provides
-    @ActivityScope
+    @Singleton
     fun provideOAuthParams() =
         OAuthParams(
             BuildConfig.SERVER_PATH,

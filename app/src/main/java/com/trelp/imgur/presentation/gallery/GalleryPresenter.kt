@@ -6,31 +6,27 @@ import com.trelp.imgur.di.FragmentScope
 import com.trelp.imgur.domain.Filter
 import com.trelp.imgur.domain.GalleryInteractor
 import com.trelp.imgur.domain.GalleryObject
+import com.trelp.imgur.presentation.ErrorHandler
 import com.trelp.imgur.presentation.FlowRouter
 import com.trelp.imgur.presentation.Paginator
-import io.reactivex.disposables.CompositeDisposable
+import com.trelp.imgur.presentation.global.BasePresenter
 import io.reactivex.disposables.Disposable
-import moxy.MvpPresenter
 import javax.inject.Inject
 
 @FragmentScope
 class GalleryPresenter @Inject constructor(
     @FlowNav private val flowRouter: FlowRouter,
     private val galleryInteractor: GalleryInteractor,
+    private val paginator: Paginator.Store<GalleryObject>,
+    private val errorHandler: ErrorHandler,
     private val schedulers: SchedulersProvider
-) : MvpPresenter<GalleryView>() {
+) : BasePresenter<GalleryView>() {
+
     private var currentFilter: Filter = Filter.MV_POPULAR
     private var pageDisposable: Disposable? = null
-    private val compositeDisposable = CompositeDisposable()
 
-    private val paginator = Paginator.Store<GalleryObject>().apply {
-        render = { viewState.renderState(it) }
-        sideEffects = {
-            when (it) {
-                is Paginator.SideEffect.LoadPage -> loadNewPage(it.page)
-                is Paginator.SideEffect.ErrorEvent -> viewState.showErrorMessage(it.error.toString())   // TODO: 20.09.2020 Сделать нормальную обработку
-            }
-        }
+    init {
+        initPaginator()
     }
 
     override fun onFirstViewAttach() {
@@ -39,10 +35,15 @@ class GalleryPresenter @Inject constructor(
         refreshGallery()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-
-        compositeDisposable.dispose()
+    private fun initPaginator() {
+        paginator.render = viewState::renderState
+        paginator.sideEffects.subscribe {
+            when (it) {
+                is Paginator.SideEffect.LoadPage -> loadNewPage(it.page)
+                is Paginator.SideEffect.ErrorEvent ->
+                    errorHandler.proceed(it.error) { msg -> viewState.showErrorMessage(msg) }
+            }
+        }.connect()
     }
 
     fun refreshGallery() = paginator.proceed(Paginator.Action.Refresh)
@@ -67,7 +68,7 @@ class GalleryPresenter @Inject constructor(
                 },
                 { paginator.proceed(Paginator.Action.PageError(it)) }
             )
-        pageDisposable?.let { compositeDisposable.add(it) }
+        pageDisposable?.connect()
     }
 
     fun onBackPressed() {

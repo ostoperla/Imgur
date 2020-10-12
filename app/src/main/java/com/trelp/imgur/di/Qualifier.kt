@@ -22,3 +22,18 @@ annotation class AppContext
 @Retention(AnnotationRetention.RUNTIME)
 @Target(FIELD, FUNCTION, VALUE_PARAMETER)
 annotation class ActivityContext
+
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+@Target(FIELD, FUNCTION, VALUE_PARAMETER)
+annotation class CommonClient
+
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+@Target(FIELD, FUNCTION, VALUE_PARAMETER)
+annotation class AuthClient
+
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+@Target(FIELD, FUNCTION, VALUE_PARAMETER)
+annotation class GlideClient

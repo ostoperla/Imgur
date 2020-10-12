@@ -1,8 +1,12 @@
 package com.trelp.imgur.presentation
 
+import com.jakewharton.rxrelay2.PublishRelay
+import com.trelp.imgur.data.SchedulersProvider
+import io.reactivex.Observable
 import timber.log.Timber
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import javax.inject.Inject
 
 object Paginator {
 
@@ -187,25 +191,36 @@ object Paginator {
         }
     }
 
-    class Store<T> {
+    class Store<T> @Inject constructor(schedulers: SchedulersProvider) {
         private var currentState: State = State.Empty
 
         // SideEffects должны уходить асинхронно в другой Thread. Иначе можно заблокировать
         // sideEffectListener и пока он не завершится, новый State не будет возвращен.
         // Тот кто подписывается, будет получать callbacks на другом Thread.
         private val sideEffectsExecutor: ExecutorService = Executors.newSingleThreadExecutor()
+        // SideEffects запускаются не на UI Thread, а результат нужен на UI.
+        // В случае c SideEffect.LoadPage, имеется rx chain в presenter в котором также происходит
+        // отписка от предыдущего SideEffect.LoadPage.
+        // В случае с SideEffect.ErrorEvent сообщение летит с другого треда на View и никакой
+        // обработки SideEffect нету.
+        private val sideEffectsRelay: PublishRelay<SideEffect> = PublishRelay.create()
+
+        val sideEffects: Observable<SideEffect> =
+            sideEffectsRelay
+                .hide()
+                .observeOn(schedulers.ui())
+
         var render: (State) -> Unit = {}
             set(value) {
                 field = value
                 value(currentState)
             }
-        var sideEffects: (SideEffect) -> Unit = {}
 
         fun proceed(action: Action) {
             Timber.d("Action: $action")
-            val newState = reducer<T>(action, currentState) { sideEffect ->
-                Timber.d("SideEffect: $sideEffect")
-                sideEffectsExecutor.submit { sideEffects(sideEffect) }
+            val newState = reducer<T>(action, currentState) {
+                Timber.d("SideEffect: $it")
+                sideEffectsExecutor.submit { sideEffectsRelay.accept(it) }
             }
             if (newState != currentState) {
                 currentState = newState

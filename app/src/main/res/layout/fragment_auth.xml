@@ -14,9 +14,21 @@
         app:title="@string/auth_title"
         app:titleTextColor="#FFFFFF" />
 
-    <WebView
-        android:id="@+id/authWebView"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+        <WebView
+            android:id="@+id/authWebView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.trelp.imgur.ui.base.view.compound.EmptyView
+            android:id="@+id/emptyView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
+    </FrameLayout>
 
 </LinearLayout>

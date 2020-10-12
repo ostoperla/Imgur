@@ -1,4 +1,4 @@
-package com.trelp.imgur.data.source.network
+package com.trelp.imgur.data.source.network.deserializer
 
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer

@@ -5,10 +5,7 @@ import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.webkit.CookieManager
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.trelp.imgur.R
@@ -19,6 +16,7 @@ import com.trelp.imgur.di.flow.auth.AuthFlowComponent
 import com.trelp.imgur.presentation.auth.AuthPresenter
 import com.trelp.imgur.presentation.auth.AuthView
 import com.trelp.imgur.ui.base.BaseFragment
+import com.trelp.imgur.visible
 import moxy.ktx.moxyPresenter
 import timber.log.Timber
 import javax.inject.Inject
@@ -31,22 +29,18 @@ class AuthFragment : BaseFragment<AuthComponent>(R.layout.fragment_auth), AuthVi
 
     @Inject
     lateinit var presenterProvider: Provider<AuthPresenter>
-
     private val presenter by moxyPresenter { presenterProvider.get() }
 
     //region LifeCycle
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        Timber.d(javaClass.simpleName)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         viewBinding = FragmentAuthBinding.bind(view)
 
-        binding.toolbar.setNavigationOnClickListener { presenter.onBackPressed() }
+        with(binding) {
+            toolbar.setNavigationOnClickListener { presenter.onBackPressed() }
+            emptyView.setRefreshListener { presenter.refresh() }
+        }
 
         clearCookies()
         configWebView()
@@ -71,25 +65,16 @@ class AuthFragment : BaseFragment<AuthComponent>(R.layout.fragment_auth), AuthVi
     }
     //endregion
 
-    //region AuthView
     override fun loadUrl(url: String) {
         binding.authWebView.loadUrl(url)
     }
 
-    override fun showProgress() {
-        Toast.makeText(requireContext(), "Show progress", Toast.LENGTH_SHORT).show()
+    override fun showProgress(isVisible: Boolean) {
+        Toast.makeText(requireContext(), "$isVisible", Toast.LENGTH_SHORT).show()
     }
 
-    override fun hideProgress() {
-        Toast.makeText(requireContext(), "Hide progress", Toast.LENGTH_SHORT).show()
-    }
-
-    override fun showError(error: Throwable) {
-        Toast.makeText(requireContext(), "Show error", Toast.LENGTH_SHORT).show()
-    }
-
-    override fun hideError() {
-        Toast.makeText(requireContext(), "Hide error", Toast.LENGTH_SHORT).show()
+    override fun showMessage(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -98,21 +83,52 @@ class AuthFragment : BaseFragment<AuthComponent>(R.layout.fragment_auth), AuthVi
             settings.javaScriptEnabled = true
             webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView?, url: String?) {
+
+                    Timber.d("onPageFinished")
+
                     super.onPageFinished(view, url)
-                    hideProgress()
+
+                    showProgress(false)
                 }
 
                 override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                    showProgress()
+
+                    Timber.d("onPageStarted")
+
+                    showProgress(true)
+                    showEmptyView(false)
+
                     super.onPageStarted(view, url, favicon)
                 }
 
-                override fun shouldOverrideUrlLoading(view: WebView, url: String) =
-                    presenter.onRedirect(url)
+                @RequiresApi(Build.VERSION_CODES.M)
+                override fun onReceivedError(
+                    view: WebView?,
+                    request: WebResourceRequest?,
+                    error: WebResourceError?
+                ) {
+
+                    Timber.d("onReceivedError")
+
+                    super.onReceivedError(view, request, error)
+
+                    showEmptyView(true)
+                }
+
+                override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+
+                    Timber.d("shouldOverrideUrlLoading")
+
+                    return presenter.onRedirect(url)
+                }
 
                 @RequiresApi(value = Build.VERSION_CODES.N)
-                override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest) =
-                    presenter.onRedirect(request.url.toString())
+                override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
+
+                    Timber.d("shouldOverrideUrlLoading N")
+
+                    return presenter.onRedirect(request.url.toString())
+                }
             }
         }
     }
@@ -120,7 +136,14 @@ class AuthFragment : BaseFragment<AuthComponent>(R.layout.fragment_auth), AuthVi
     private fun clearCookies() {
         CookieManager.getInstance().removeAllCookies(null)
     }
-    //endregion
+
+    private fun showEmptyView(show: Boolean) {
+        with(binding.emptyView) {
+            if (show) showEmptyError()
+            else hide()
+        }
+        binding.authWebView.visible(!show)
+    }
 
     override fun onBackPressed() {
         with(binding.authWebView) {

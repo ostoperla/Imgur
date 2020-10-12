@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import com.trelp.imgur.presentation.ResourceManager
 import retrofit2.HttpException
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.android.support.SupportAppScreen
@@ -57,4 +58,23 @@ fun Throwable.message(context: Context) = when (this) {
     }
     is IOException -> context.getString(R.string.network_error)
     else -> context.getString(R.string.unknown_error)
+}
+
+fun Throwable.message(resourceManager: ResourceManager) = when (this) {
+    is HttpException -> {
+        when (code()) {
+            304 -> resourceManager.getString(R.string.not_modified_error)
+            400 -> resourceManager.getString(R.string.bad_request_error)
+            401 -> resourceManager.getString(R.string.unauthorized_error)
+            403 -> resourceManager.getString(R.string.forbidden_error)
+            404 -> resourceManager.getString(R.string.not_found_error)
+            405 -> resourceManager.getString(R.string.method_not_allowed_error)
+            409 -> resourceManager.getString(R.string.conflict_error)
+            422 -> resourceManager.getString(R.string.unprocessable_error)
+            500 -> resourceManager.getString(R.string.server_error_error)
+            else -> resourceManager.getString(R.string.unknown_error)
+        }
+    }
+    is IOException -> resourceManager.getString(R.string.network_error)
+    else -> resourceManager.getString(R.string.unknown_error)
 }

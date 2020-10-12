@@ -11,7 +11,7 @@ import com.trelp.imgur.di.flow.drawer.DrawerFlowComponent
 import com.trelp.imgur.di.gallery.GalleryComponent
 import com.trelp.imgur.domain.Filter
 import com.trelp.imgur.domain.GalleryObject
-import com.trelp.imgur.presentation.Paginator
+import com.trelp.imgur.presentation.Paginator.State
 import com.trelp.imgur.presentation.gallery.GalleryPresenter
 import com.trelp.imgur.presentation.gallery.GalleryView
 import com.trelp.imgur.ui.base.BaseFragment
@@ -76,19 +76,12 @@ class GalleryFragment : BaseFragment<GalleryComponent>(R.layout.fragment_gallery
     //endregion
 
     //region GalleryView
-    override fun renderState(state: Paginator.State) {
+    override fun renderState(state: State) {
         binding.pagingView.render(state)
     }
 
-    // SideEffects запускаются не на UI Thread, а результат нужен на UI.
-    // В случае c SideEffect.LoadPage, имеется rx chain в presenter.loadNewPage(page), в котором также
-    // происходит отписка от предыдущего SideEffect.LoadPage.
-    // В случае с SideEffect.ErrorEvent сообщение летит с другого треда на View и никакой обработки
-    // SideEffect нету.
     override fun showErrorMessage(msg: String) {
-        requireActivity().runOnUiThread {
-            Toast.makeText(requireActivity(), msg, Toast.LENGTH_SHORT).show()
-        }
+        Toast.makeText(requireActivity(), msg, Toast.LENGTH_SHORT).show()
     }
     //endregion
 

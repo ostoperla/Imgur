@@ -1,5 +1,6 @@
-package com.trelp.imgur.data.source.network
+package com.trelp.imgur.data.source.network.api
 
+import com.trelp.imgur.data.source.network.GalleryResponse
 import com.trelp.imgur.domain.Sort
 import com.trelp.imgur.domain.Window
 import io.reactivex.Single

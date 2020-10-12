@@ -1,6 +1,6 @@
 package com.trelp.imgur.data
 
-import com.trelp.imgur.data.source.network.ImgurApi
+import com.trelp.imgur.data.source.network.api.ImgurApi
 import com.trelp.imgur.di.FragmentScope
 import com.trelp.imgur.domain.GalleryObject
 import com.trelp.imgur.domain.Sort

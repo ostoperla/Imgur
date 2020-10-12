@@ -4,7 +4,7 @@ import com.trelp.imgur.Screens
 import com.trelp.imgur.di.FlowNav
 import com.trelp.imgur.di.FragmentScope
 import com.trelp.imgur.domain.SessionInteractor
-import com.trelp.imgur.domain.UserAccount
+import com.trelp.imgur.domain.session.UserAccount
 import com.trelp.imgur.presentation.FlowRouter
 import com.trelp.imgur.presentation.GlobalMenuController
 import com.trelp.imgur.presentation.drawer.NavDrawerView.MenuItem

@@ -1,6 +1,6 @@
 package com.trelp.imgur.presentation.drawer
 
-import com.trelp.imgur.domain.UserAccount
+import com.trelp.imgur.domain.session.UserAccount
 import moxy.MvpView
 import moxy.viewstate.strategy.AddToEndSingleStrategy
 import moxy.viewstate.strategy.StateStrategyType
