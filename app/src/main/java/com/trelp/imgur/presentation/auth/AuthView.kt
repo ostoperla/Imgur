@@ -9,11 +9,7 @@ interface AuthView : MvpView {
 
     fun loadUrl(url: String)
 
-    fun showProgress()
+    fun showProgress(isVisible: Boolean)
 
-    fun hideProgress()
-
-    fun showError(error: Throwable)
-
-    fun hideError()
+    fun showMessage(message: String)
 }

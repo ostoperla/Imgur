@@ -1,4 +1,4 @@
-package com.trelp.imgur.domain
+package com.trelp.imgur.domain.session
 
 data class OAuthParams(
     val serverPath: String,

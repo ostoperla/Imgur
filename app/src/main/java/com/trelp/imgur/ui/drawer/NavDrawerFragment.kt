@@ -8,7 +8,7 @@ import com.trelp.imgur.databinding.ItemAddAccountBinding
 import com.trelp.imgur.di.Injector
 import com.trelp.imgur.di.drawer.NavDrawerComponent
 import com.trelp.imgur.di.flow.drawer.DrawerFlowComponent
-import com.trelp.imgur.domain.UserAccount
+import com.trelp.imgur.domain.session.UserAccount
 import com.trelp.imgur.inflater
 import com.trelp.imgur.presentation.drawer.NavDrawerPresenter
 import com.trelp.imgur.presentation.drawer.NavDrawerView

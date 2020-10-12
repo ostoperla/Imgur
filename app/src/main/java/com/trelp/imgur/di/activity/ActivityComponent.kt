@@ -9,7 +9,6 @@ import dagger.Subcomponent
 
 @Subcomponent(
     modules = [
-        AuthModule::class,
         NavModule::class
     ]
 )
