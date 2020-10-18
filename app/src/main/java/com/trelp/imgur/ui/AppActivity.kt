@@ -34,6 +34,14 @@ class AppActivity : MvpAppCompatActivity(R.layout.layout_container),
     private lateinit var daggerComponentKey: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        with(window) {
+            setEdgeToEdgeSystemUiFlags()
+            setColorsForSystemBars(
+                statusBarColorRes = R.color.status_bar_back,
+                navigationBarColorRes = R.color.nav_bar_back
+            )
+        }
+
         daggerComponentKey = savedInstanceState?.getString(STATE_COMPONENT_KEY)
             ?: "${javaClass.simpleName}#${this.hashCode()}"
 

@@ -14,6 +14,7 @@ import com.trelp.imgur.domain.GalleryObject
 import com.trelp.imgur.presentation.Paginator.State
 import com.trelp.imgur.presentation.gallery.GalleryPresenter
 import com.trelp.imgur.presentation.gallery.GalleryView
+import com.trelp.imgur.ui.addSystemTopPadding
 import com.trelp.imgur.ui.base.BaseFragment
 import com.trelp.imgur.ui.base.adapter.PaginalAdapter
 import com.trelp.imgur.ui.base.adapter.StaggeredGridProgressAdapterDelegate
@@ -49,6 +50,7 @@ class GalleryFragment : BaseFragment<GalleryComponent>(R.layout.fragment_gallery
         viewBinding = FragmentGalleryBinding.bind(view)
 
         with(binding.toolbar) {
+            addSystemTopPadding()
             inflateMenu(R.menu.gallery_menu)
             setOnMenuItemClickListener {
                 when (it.itemId) {
