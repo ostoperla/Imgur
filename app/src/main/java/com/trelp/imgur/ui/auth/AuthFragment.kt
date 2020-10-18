@@ -15,6 +15,7 @@ import com.trelp.imgur.di.auth.AuthComponent
 import com.trelp.imgur.di.flow.auth.AuthFlowComponent
 import com.trelp.imgur.presentation.auth.AuthPresenter
 import com.trelp.imgur.presentation.auth.AuthView
+import com.trelp.imgur.ui.addSystemTopPadding
 import com.trelp.imgur.ui.base.BaseFragment
 import com.trelp.imgur.visible
 import moxy.ktx.moxyPresenter
@@ -38,6 +39,7 @@ class AuthFragment : BaseFragment<AuthComponent>(R.layout.fragment_auth), AuthVi
         viewBinding = FragmentAuthBinding.bind(view)
 
         with(binding) {
+            toolbar.addSystemTopPadding()
             toolbar.setNavigationOnClickListener { presenter.onBackPressed() }
             emptyView.setRefreshListener { presenter.refresh() }
         }

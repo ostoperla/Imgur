@@ -14,6 +14,7 @@ import com.trelp.imgur.presentation.drawer.NavDrawerPresenter
 import com.trelp.imgur.presentation.drawer.NavDrawerView
 import com.trelp.imgur.presentation.drawer.NavDrawerView.MenuItem
 import com.trelp.imgur.presentation.drawer.NavDrawerView.MenuItem.*
+import com.trelp.imgur.ui.addSystemTopPadding
 import com.trelp.imgur.ui.base.BaseFragment
 import moxy.ktx.moxyPresenter
 import javax.inject.Inject
@@ -38,6 +39,8 @@ class NavDrawerFragment : BaseFragment<NavDrawerComponent>(R.layout.fragment_nav
         showAccounts(false)
 
         with(binding) {
+            constraintLayoutContainer.addSystemTopPadding()
+
             homeMenuItem.tag = HOME
             settingsMenuItem.tag = SETTINGS
             aboutMenuItem.tag = ABOUT

@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.trelp.imgur.databinding.PaginalViewBinding
 import com.trelp.imgur.message
 import com.trelp.imgur.presentation.Paginator
+import com.trelp.imgur.ui.addSystemBottomPadding
 import com.trelp.imgur.ui.base.adapter.PaginalAdapter
 import com.trelp.imgur.visible
 
@@ -38,6 +39,7 @@ class PaginalRenderStateView @JvmOverloads constructor(
             layoutManager = manager
             adapter = pagAdapter
             setHasFixedSize(true)
+            addSystemBottomPadding()
         }
     }
 
